@@ -88,6 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->priority = 10;
 
   release(&ptable.lock);
 
@@ -216,6 +217,8 @@ fork(void)
 
   np->state = RUNNABLE;
 
+  np->priority = 10;
+
   release(&ptable.lock);
 
   return pid;
@@ -318,27 +321,45 @@ wait(void)
 //  - choose a process to run
 //  - swtch to start running that process
 //  - eventually that process transfers control
-//      via swtch back to the scheduler.
+//      via swtch back to the scheduler
+//
+//
+//
+
+struct proc* find_proc_with_lowest_prior_value(int * switchNeeded){
+	struct proc *lowestPriority = ptable.proc;
+	struct proc *p;	
+	*switchNeeded = 0;
+	for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+		if(p->state != RUNNABLE){
+			continue;
+		}
+		*switchNeeded += 1;
+		if(*switchNeeded == 1){
+			lowestPriority = p;
+		}
+		else if(p->priority < lowestPriority->priority){
+			lowestPriority = p;
+		}
+	
+	}
+	return lowestPriority;
+
+}
+
 void
 scheduler(void)
 {
   struct proc *p;
   struct cpu *c = mycpu();
+  int switchNeeded = 0;
   c->proc = 0;
   
   for(;;){
-    // Enable interrupts on this processor.
     sti();
-
-    // Loop over process table looking for process to run.
     acquire(&ptable.lock);
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
-        continue;
-
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
+	p = find_proc_with_lowest_prior_value(&switchNeeded);	
+	if(switchNeeded > 0){
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
@@ -349,7 +370,7 @@ scheduler(void)
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       c->proc = 0;
-    }
+ 	}   
     release(&ptable.lock);
 
   }
