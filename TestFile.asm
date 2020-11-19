@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
   f9:	83 c0 28             	add    $0x28,%eax
   fc:	89 04 24             	mov    %eax,(%esp)
   ff:	e8 66 02 00 00       	call   36a <set_prior>
- 104:	ba 50 c3 00 00       	mov    $0xc350,%edx
+ 104:	ba 20 a1 07 00       	mov    $0x7a120,%edx
  109:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
     for (i = 0; i <  4; i++) {
  110:	b8 e8 03 00 00       	mov    $0x3e8,%eax
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 			for(k=0;k<1000;k++) {
  119:	83 e8 01             	sub    $0x1,%eax
  11c:	75 fa                	jne    118 <PScheduler+0xe8>
-		for (j=0;j<50000;j++) {
+		for (j=0;j<500000;j++) {
  11e:	83 ea 01             	sub    $0x1,%edx
  121:	75 ed                	jne    110 <PScheduler+0xe0>
 		printf(1, "\n child# %d with priority %d has finished! \n",getpid(),get_prior());		

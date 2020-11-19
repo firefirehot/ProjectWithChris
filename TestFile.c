@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 		set_prior(40-10*i);
 	//	printf(1,"\n It has a priorty value of %d \n",get_prior());
 			
-		for (j=0;j<50000;j++) {
+		for (j=0;j<500000;j++) {
 			for(k=0;k<1000;k++) {
 				asm("nop"); }}
 		printf(1, "\n child# %d with priority %d has finished! \n",getpid(),get_prior());		
