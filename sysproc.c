@@ -8,6 +8,22 @@
 #include "proc.h"
 
 int
+sys_set_prior(void)
+{
+ int priorityNum;
+ argint(0, &priorityNum);
+ set_prior(priorityNum);
+ return 0;
+
+}
+
+int
+sys_get_prior(void)
+{
+       return get_prior(); 
+}
+
+int
 sys_fork(void)
 {
   return fork();

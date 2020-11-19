@@ -217,7 +217,7 @@ fork(void)
 
   np->state = RUNNABLE;
 
-  np->priority = 10;
+ // np->priority = 10;
 
   release(&ptable.lock);
 
@@ -326,6 +326,26 @@ wait(void)
 //
 //
 
+void
+set_prior(int priorityNum)
+{
+  struct proc *currProc = myproc();
+  if(priorityNum >= 0)
+  {
+	currProc->priority = priorityNum;
+	cprintf("the value of the proc is %d \n",currProc->priority);	
+  }
+  //yield();
+
+}
+
+int
+get_prior(void)
+{
+ struct proc *currProc = myproc();
+ return currProc->priority;
+}
+
 struct proc* find_proc_with_lowest_prior_value(int * switchNeeded){
 	struct proc *lowestPriority = ptable.proc;
 	struct proc *p;	
@@ -375,8 +395,6 @@ scheduler(void)
 
   }
 }
-
-// Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
 // intena because intena is a property of this
 // kernel thread, not this CPU. It should
