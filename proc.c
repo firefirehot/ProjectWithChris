@@ -330,7 +330,7 @@ void
 set_prior(int priorityNum)
 {
   struct proc *currProc = myproc();
-  if(priorityNum >= 0)
+  if(priorityNum >= 0 && priorityNum <= 41)
   {
 	//acquire(&ptable.lock);
 	currProc->priority = priorityNum;
