@@ -378,7 +378,6 @@ scheduler(void)
 {
   struct proc *p = ptable.proc;
   struct cpu *c = mycpu();
-  struct proc *lastp = p;
   int switchNeeded = 0;
   c->proc = 0;
   
